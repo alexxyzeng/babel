@@ -151,7 +151,7 @@ export const getModulesPluginNames = ({
       if (shouldTransformDynamicImport) {
         console.warn(
           "Dynamic import can only be supported when transforming ES modules" +
-            " to AMD, CommonJS or SystemJS. Only the parser plugin will be enabled.",
+          " to AMD, CommonJS or SystemJS. Only the parser plugin will be enabled.",
         );
       }
       modulesPluginNames.push("syntax-dynamic-import");
@@ -172,8 +172,33 @@ export const getModulesPluginNames = ({
 
   return modulesPluginNames;
 };
-
-export const getPolyfillPlugins = ({
+/**
+ *
+ *
+ * @param {({
+ *   useBuiltIns: BuiltInsOption;
+ *   corejs: SemVer | null | false;
+ *   polyfillTargets: Targets;
+ *   include: Set<string>;
+ *   exclude: Set<string>;
+ *   proposals: boolean;
+ *   shippedProposals: boolean;
+ *   regenerator: boolean;
+ *   debug: boolean;
+ * })} {
+ *   useBuiltIns,
+ *   corejs,
+ *   polyfillTargets,
+ *   include,
+ *   exclude,
+ *   proposals,
+ *   shippedProposals,
+ *   regenerator,
+ *   debug,
+ * }
+ * @return {*} 
+ */
+const getPolyfillPlugins = ({
   useBuiltIns,
   corejs,
   polyfillTargets,
@@ -209,6 +234,7 @@ export const getPolyfillPlugins = ({
 
     if (corejs) {
       if (useBuiltIns === "usage") {
+        // TODO: 使用legacyBabelPolyfillPlugin
         if (corejs.major === 2) {
           polyfillPlugins.push(
             [pluginCoreJS2, pluginOptions],
@@ -357,7 +383,7 @@ option \`forceAllTransforms: true\` instead.
 
   const include = transformIncludesAndExcludes(optionsInclude);
   const exclude = transformIncludesAndExcludes(optionsExclude);
-
+  // TODO: getPluginList
   const compatData = getPluginList(shippedProposals, bugfixes);
   const shouldSkipExportNamespaceFrom =
     (modules === "auto" && api.caller?.(supportsExportNamespaceFrom)) ||
@@ -391,10 +417,11 @@ option \`forceAllTransforms: true\` instead.
   );
   removeUnnecessaryItems(pluginNames, overlappingPlugins);
   removeUnsupportedItems(pluginNames, api.version);
+  // TODO: shippedProposals
   if (shippedProposals) {
     addProposalSyntaxPlugins(pluginNames, proposalSyntaxPlugins);
   }
-
+  // 获取polyfill plugins
   const polyfillPlugins = getPolyfillPlugins({
     useBuiltIns,
     corejs,
