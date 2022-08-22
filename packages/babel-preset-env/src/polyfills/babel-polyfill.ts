@@ -15,6 +15,8 @@ export default function (
   { template }: any,
   { regenerator, deprecated, usage }: any,
 ) {
+  // TODO: 如何用core-js替换@babel/polyfill
+  // TODO: regenerator-runtime/runtime.js是做什么的
   return {
     name: "preset-env/replace-babel-polyfill",
     visitor: {
